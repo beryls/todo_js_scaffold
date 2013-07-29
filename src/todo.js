@@ -8,10 +8,15 @@
 window.onload = function() {
   addItem = document.getElementById('add-item');
   inputTask = document.getElementById('new-task-field');
+  todoList = document.getElementById('todo-items');
 
   addItem.onclick = function(event){
     var name = inputTask.value;
     todoApp.addTodo(name);
+    var newItem = document.createElement('li');
+    newItem.innerText = name;
+    todoList.appendChild(newItem);
+    inputTask.value = "";
   };
 };
 
