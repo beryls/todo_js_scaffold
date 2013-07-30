@@ -63,17 +63,40 @@ var todoItem = {
     metaData.innerHTML = "Created on: " + date.toLocaleDateString() + " ";
     actions.appendChild(metaData);
 
+    actions.appendChild(this.completedButton());
+
     name.innerHTML = this.todoName;
     name.appendChild(actions);
 
     newTodo.appendChild(name);
 
     return newTodo;
+  },
+
+  completedButton: function() {
+    var button = document.createElement('button');
+    button.className = "complete";
+    button.innerHTML = "completed";
+    var that = this;
+    button.onclick = function(event) {
+      var button = event.target;
+      var todo = todoApp.todoList().removeChild(that.getTodo(event));
+      var metaData = that.getMetaData(event);
+      var date = new Date();
+      metaData.innerHTML = "Completed on: " + date.toLocaleDateString() + " ";
+      button.parentNode.removeChild(button);
+      todoApp.completedList().appendChild(todo);
+    };
+    return button;
+  },
+
+  getTodo: function(event) {
+    return event.target.parentNode.parentNode.parentNode;
+  },
+
+  getMetaData: function(event) {
+    return event.target.parentNode.getElementsByTagName("span")[0];
   }
-
 }
-
-var Create = function() {};
-Create.prototype = todoItem;
 
 
