@@ -1,41 +1,77 @@
-// function todoApp() {
-//   unfinished: [],
-//   finished: [],
-//   var addTodo: function() {
-//     // create todo object, add to unfinished list
-//   }
-// }
+if (typeof Object.create !== 'function') {
+  Object.create = function(o) {
+    var F = function() {};
+    F.prototype = o;
+    return new F();
+  };
+}
+
 window.onload = function() {
   addItem = document.getElementById('add-item');
   inputTask = document.getElementById('new-task-field');
-  todoList = document.getElementById('todo-items');
 
-  addItem.onclick = function(event){
-    var name = inputTask.value;
-    todoApp.addTodo(name);
-    var newItem = document.createElement('li');
-    newItem.innerText = name;
-    todoList.appendChild(newItem);
-    inputTask.value = "";
-  };
-};
+
+  var addEvent = function(event) {
+    if (event.keyCode === 13 || event.keyCode === 0) {
+      todoApp.addTodo(inputTask.value);
+      inputTask.value = "";
+    }
+  }
+
+  addItem.onclick = addEvent;
+  inputTask.onkeypress = addEvent;
+}
 
 var todoApp = {
-  unfinished: [],
-  finished: [],
+  todoList: function() {
+    return document.getElementById('todo-items');
+  },
+
+  completedList: function() {
+    return document.getElementById('completed-items');
+  },
+
   addTodo: function(name) {
-    var task = new Create();
-    task.name = name;
-    if (task.name.length > 0) {
-      this.unfinished.unshift(task);
+    var todo = Object.create(todoItem);
+    todo.setName(name);
+    this.appendTodo(todo);
+  },
+
+  appendTodo: function(todo) {
+    if (todo.todoName.length !== 0) {
+      this.todoList().appendChild(todo.render());
     }
-    // create todo object, add to unfinished list
   }
-};
+}
 
 var todoItem = {
-  done: false
-};
+  setName: function(name) {
+    this.todoName = name;
+  },
+
+  render: function() {
+    var newTodo = document.createElement('li');
+    var name = document.createElement('div');
+    var actions = document.createElement('div');
+    var metaData = document.createElement('span');
+
+    name.className = "items";
+    actions.className = "actions";
+    metaData.className = "meta-data";
+
+    var date = new Date();
+    metaData.innerHTML = "Created on: " + date.toLocaleDateString() + " ";
+    actions.appendChild(metaData);
+
+    name.innerHTML = this.todoName;
+    name.appendChild(actions);
+
+    newTodo.appendChild(name);
+
+    return newTodo;
+  }
+
+}
 
 var Create = function() {};
 Create.prototype = todoItem;
